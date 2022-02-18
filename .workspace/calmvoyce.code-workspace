@@ -1,16 +1,18 @@
 {
 	"folders": [
 		{
-			"uri": "vscode-remote://dev-container+643a5c70726f6a656374735c652d7363616c65/workspaces/e-scale"
+			"path": "../projects"
+		},
+		{
+			"path": ".."
 		}
 	],
-	"remoteAuthority": "dev-container+643a5c70726f6a656374735c652d7363616c65",
 	"settings": {
 		"intelephense.format.enable": false,
 		"phpsab.executablePathCBF": "/home/vscode/.composer/vendor/bin/phpcbf",
 		"phpsab.executablePathCS": "/home/vscode/.composer/vendor/bin/phpcs",
 		"phpsab.snifferMode": "onSave",
-		"phpsab.standard": "/workspaces/e-scale/phpcs.xml",
+		"phpsab.standard": "/workspaces/calmvoyce/phpcs.xml",
 
 		"runTerminalCommand.commands": [
 			{

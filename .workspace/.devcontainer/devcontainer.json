@@ -46,6 +46,5 @@
 	],
 
 	"postCreateCommand": "php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\" && php composer-setup.php && php -r \"unlink('composer-setup.php');\" && sudo mv composer.phar /usr/local/bin/composer && composer global require squizlabs/php_codesniffer wp-coding-standards/wpcs",
-	"postStartCommand": "echo 'export PATH=/root/.composer/vendor/bin:$PATH' >> /root/.bashrc && . /root/.bashrc && /root/.composer/vendor/bin/phpcs --config-set installed_paths /root/.composer/vendor/wp-coding-standards/wpcs",
-	"initializeCommand": "wsl bash calmvoyce.sh init"
+	"postStartCommand": "echo 'export PATH=/root/.composer/vendor/bin:$PATH' >> /root/.bashrc && . /root/.bashrc && /root/.composer/vendor/bin/phpcs --config-set installed_paths /root/.composer/vendor/wp-coding-standards/wpcs"
 }

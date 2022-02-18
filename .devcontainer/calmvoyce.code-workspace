@@ -1,0 +1,37 @@
+{
+	"folders": [
+		{
+			"uri": "vscode-remote://dev-container+643a5c70726f6a656374735c652d7363616c65/workspaces/e-scale"
+		}
+	],
+	"remoteAuthority": "dev-container+643a5c70726f6a656374735c652d7363616c65",
+	"settings": {
+		"intelephense.format.enable": false,
+		"phpsab.executablePathCBF": "/home/vscode/.composer/vendor/bin/phpcbf",
+		"phpsab.executablePathCS": "/home/vscode/.composer/vendor/bin/phpcs",
+		"phpsab.snifferMode": "onSave",
+		"phpsab.standard": "/workspaces/e-scale/phpcs.xml",
+
+		"runTerminalCommand.commands": [
+			{
+				"command": "./calmvoyce.sh init",
+				"name": "Init Containers",
+				"group": "CalmVoyce's Command Line"
+			},
+			{
+				"command": "./calmvoyce.sh down",
+				"name": "Delete All Containers",
+				"group": "CalmVoyce's Command Line"
+			},
+			{
+				"command": "./calmvoyce.sh cert",
+				"name": "Generate Certificates",
+				"group": "CalmVoyce's Command Line"
+			}
+		],
+		"[php]": {
+			"editor.defaultFormatter": "valeryanm.vscode-phpsab"
+		},
+		"git.ignoreLimitWarning": true
+	}
+}

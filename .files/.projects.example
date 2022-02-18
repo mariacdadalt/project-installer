@@ -1,0 +1,4 @@
+projects=calmvoyce
+
+calmvoyce.domain=example.com
+calmvoyce.repository=repository.git

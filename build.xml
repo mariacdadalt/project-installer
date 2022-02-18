@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="project-installer" default="init">
+
+    <!-- ===================================================================== -->
+    <!-- Target: init                                            -->
+    <!-- ===================================================================== -->
+    <target name="init">
+        <if>
+            <available property="projects" file=".projects" />
+            <then>
+                <echo message="project-file exists" />
+            </then>
+            <else>
+                <copy file=".files/.projects.example" tofile=".projects" />
+            </else>
+        </if>
+    </target>
+
+    <!-- ===================================================================== -->
+    <!-- Target: install-projects                                              -->
+    <!-- ===================================================================== -->
+    <target name="install-projects">
+        <property file=".projects" />
+        <!-- loop through files, and call subtask task with set param and absparam -->
+        <foreach list="${projects}" param="project" target="install-update-project" />
+    </target>
+
+    <!-- ===================================================================== -->
+    <!-- Target: install-update-project                                        -->
+    <!-- ===================================================================== -->
+    <target name="install-update-project">
+        <property name="project_name" value="${project}" />
+        <property name="project_repo" value="${${project}.repository}" />
+        <property name="project_branch" value="${${project}.branch}" />
+        <property name="project_conffile" value=".docker/nginx/conf.d/${project_name}.conf" />
+        <property name="project_dir" value="projects/${project_name}" />
+		<property name="project_installed" value="false" />
+
+        <available file="${project_dir}" type="dir" property="project_installed" />
+        <if>
+            <istrue value="${project_installed}" />
+            <then>
+				<echo message="${project_name} already installed in ${project_dir}" />
+            </then>
+            <else>
+                <mkdir dir="${project_dir}" />
+				<echo message="cloning ${project_repo}" />
+                <gitclone repository="${project_repo}" targetPath="${project_dir}" branch="${project_branch}" />
+            </else>
+        </if>
+
+        <copy file="${project_dir}/nginx.conf" tofile="${project_conffile}" />
+    </target>
+
+    <!-- ===================================================================== -->
+    <!-- Target: create-project                                                -->
+    <!-- ===================================================================== -->
+    <target name="create-project">
+		<property name="project_name" value="" />
+		<property name="project_dir" value="projects/${project_name}" />
+		<property name="project_conffile" value="${project_dir}/.config/nginx.conf" />
+        
+		<input propertyName="project_name" message="Project Name (example)" />
+
+		<copy file=".files/wordpress.conf.example" tofile="${project_conffile}" />
+		<replaceregexp file="${project_conffile}" match="{{project_name}}" replace="${project_name}" />
+    </target>
+
+</project>

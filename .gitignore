@@ -1,0 +1,13 @@
+## IDE FILES
+/.idea
+
+## CONFIG FILES
+/.projects
+/.env
+
+## CERT FILES
+*.key
+*.pem
+*.crt
+*.csr
+*.srl

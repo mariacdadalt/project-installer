@@ -1,0 +1,99 @@
+version: '3.9'
+
+# Services
+services:
+
+  # Nginx Service
+  nginx:
+    build: ./.docker/nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./projects:/var/www/projects
+      - ./src:/var/www/local
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+      - phpmyadmindata:/var/www/phpmyadmin
+      - ./.docker/nginx/certs:/etc/nginx/certs
+      - ./.scripts:/.scripts
+    depends_on:
+      - php
+      - phpmyadmin
+
+  # PHP Service
+  php:
+    build: ./.docker/php
+    working_dir: /var/www
+    ports:
+      - 9000:9000
+    volumes:
+      - ./src:/var/www/local
+      - ./projects:/var/www/projects
+      - ./.scripts:/.scripts
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # MySQL Service
+  mysql:
+    image: mysql:8
+    hostname: mysql.local
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: demo
+    volumes:
+      - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./.docker/mysql/files:/import-files
+      - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      retries: 10
+
+  # PhpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5-fpm-alpine
+    environment:
+      PMA_HOST: mysql
+    volumes:
+      - phpmyadmindata:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # DNS Service
+  dns:
+    build: ./.docker/dns
+    restart: always
+    volumes:
+      - ./.docker/dns/config:/etc/dnsmasq.d
+    ports:
+      - "53:53/udp"
+    cap_add:
+      - NET_ADMIN
+
+  # Composer Service
+  composer:
+    build: ./.docker/composer
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: tail -F anything;
+
+  # Node Service
+  nodejs:
+    build: ./.docker/nodejs
+    ports:
+      - 8888:8888
+    volumes:
+      - ./projects:/home/node/projects
+    working_dir: /home/node/projects
+    environment:
+      - NODE_ENV=development
+
+# Volumes
+volumes:
+  mysqldata: null
+  phpmyadmindata: null

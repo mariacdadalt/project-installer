@@ -1,0 +1,51 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.205.2/containers/php
+{
+	"name": "WORDPRESS",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": { 
+			// Update VARIANT to pick a PHP version: 8, 8.0, 7, 7.4, 7.3
+			// Append -bullseye or -buster to pin to an OS version.
+			// Use -bullseye variants on local on arm64/Apple Silicon.
+			"VARIANT": "7.4",
+			"NODE_VERSION": "lts/*"
+		}
+	},
+	
+	// Set *default* container specific settings.json values on container create.
+	"settings": { 
+		"php.validate.executablePath": "/usr/local/bin/php"
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"bmewburn.vscode-intelephense-client",
+		"valeryanm.vscode-phpsab",
+		"eamodio.gitlens",
+		"yogensia.searchwpdocs",
+		"johnbillion.vscode-wordpress-hooks",
+		"claudiosanches.woocommerce"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	//"remoteUser": "vscode",
+	"features": {
+		"git": "latest",
+		"git-lfs": "latest"
+	},
+	"mounts": [
+		"source=${localWorkspaceFolder}/.devcontainer/.ssh,target=/root/.ssh,type=bind,consistency=cached",
+		"source=/var/run,target=/var/run,type=bind,consistency=cached"
+	],
+
+	"postCreateCommand": "php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\" && php composer-setup.php && php -r \"unlink('composer-setup.php');\" && sudo mv composer.phar /usr/local/bin/composer && composer global require squizlabs/php_codesniffer wp-coding-standards/wpcs",
+	"postStartCommand": "echo 'export PATH=/root/.composer/vendor/bin:$PATH' >> /root/.bashrc && . /root/.bashrc && /root/.composer/vendor/bin/phpcs --config-set installed_paths /root/.composer/vendor/wp-coding-standards/wpcs",
+	"initializeCommand": "wsl bash calmvoyce.sh init"
+}
